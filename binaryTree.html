@@ -15,7 +15,7 @@
 	    	
 	    	var root = null; // 根节点 
 	    	
-	    	this.insertNode = function (node, newNode) {
+	    	var insertNode = function (node, newNode) {
 	    		if (newNode.key < node.key) {
 	    		  if (node.left === null) {
 	    		    node.left = newNode;
@@ -23,7 +23,7 @@
 	    		    insertNode(node.left, newNode);
 	    		  }
 	    		} else {
-	    		  if (node.left === null) {
+	    		  if (node.right === null) {
 	    		    node.right = newNode;
             } else {
               insertNode(node.right, newNode);
@@ -40,6 +40,96 @@
             insertNode(root, newNode);
           }
         };
+        
+        // 中序遍历
+        var inOrderTraverseNode = function (node, callback) {
+          if (node !== null) {
+          	inOrderTraverseNode(node.left, callback);
+          	callback(node.key);
+          	inOrderTraverseNode(node.right, callback);
+          }
+        };
+        // 中序遍历接口
+        this.inOrderTraverse = function (callback) {
+        	inOrderTraverseNode(root, callback);
+        };
+        
+        // 前序遍历
+        var preOrderTraverseNode = function (node, callback) {
+        	if (node !== null) {
+        		callback(node.key);
+        		preOrderTraverseNode(node.left, callback);
+        		preOrderTraverseNode(node.right, callback);
+        	}
+        };
+        // 前序遍历接口
+        this.preOrderTraverse = function (callback) {
+        	preOrderTraverseNode(root, callback);
+        };
+        
+        // 后序遍历
+        var postOrderTraverseNode = function (node, callback) {
+          if (node !== null) {
+            postOrderTraverseNode(node.left, callback);
+            postOrderTraverseNode(node.right, callback);
+            callback(node.key);
+          }
+        };
+        // 后序遍历接口
+        this.postOrderTraverse = function (callback) {
+          postOrderTraverseNode(root, callback);
+        };
+        
+        // 最小节点
+        var minNode = function (node, callback) {
+        	if (node) {
+        	  while(node && node.left !== null) {
+        	    node = node.left;
+        	  }
+        	  callback(node.key);
+        	}
+        	return;
+        };
+        
+        this.min = function (callback) {
+        	minNode(root, callback);
+        };
+        
+        // 最大节点
+        var maxNode = function (node) {
+          if (node) {
+            while(node && node.right !== null) {
+              node = node.right;
+            }
+            return node.key;
+          }
+          return null;
+        };
+        
+        this.max = function () {
+          return maxNode(root);
+        };
+        
+        // 查找节点
+        var searchNode = function (node, key) {
+          if (node === null) {
+          	return false;
+          }
+          
+          if (key < node.key) {
+            return searchNode(node.left, key);
+          } else if (key > node.key) {
+            return searchNode(node.right, key);
+          } else {
+            return true; // 如果匹配的话
+          }
+        };
+        
+        this.search = function (key) {
+          return searchNode(root, key);
+        };
+        
+        
 	    }
 	    
 	    var nodes = [8, 3, 10, 1, 6, 14, 4, 7, 13];
@@ -47,6 +137,19 @@
 	    nodes.forEach(function(key) {
 	      binaryTree.insert(key);
 	    });
+	    
+	    var callback = function (key) {
+	    	console.log(key);
+	    }
+	    
+//	    binaryTree.inOrderTraverse(callback);
+//	    binaryTree.preOrderTraverse(callback);
+//	    binaryTree.postOrderTraverse(callback);
+//	    binaryTree.min(callback);
+//	    console.log('最大节点是：' + binaryTree.max());
+  	    console.log(binaryTree.search(7) ? "key 7 is found" : "key 7 is not found");
+  	    console.log(binaryTree.search(9) ? "key 9 is found" : "key 9 is not found");
+	      
 	  </script>
 	</body>
 </html>
