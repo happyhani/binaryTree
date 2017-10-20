@@ -115,7 +115,6 @@
           if (node === null) {
           	return false;
           }
-          
           if (key < node.key) {
             return searchNode(node.left, key);
           } else if (key > node.key) {
@@ -129,6 +128,55 @@
           return searchNode(root, key);
         };
         
+        
+        // 删除叶子节点
+        var findMinNode = function (node) {
+        	if (node) {
+        		while (node && node.left !== null) {
+        		  node = node.left;
+        		}
+        		return node; // 将最小子节点return
+        	}
+        }
+        var delNode = function (node, key) {
+        	if (node === null) {
+        		return null;
+        	}
+        	
+      		if (key < node.key) {
+      			node.left = delNode(node.left, key); // 将3的左节点设置为null
+      		  return node;
+      		}else if (key > node.key) {
+      		  node.right = delNode(node.right, key);
+      		  return node;
+      		}else {
+      		  // 叶子节点。不含有子节点
+      		  if (node.left === null && node.right === null) {
+      		    node = null; // 将删除节点设置为null 
+      		    return node;
+      		  }
+      		  // 删除中间节点，只有一个子节点
+      		  if (node.left === null && node.right !== null) { // 只有右节点
+      		  	node = node.right; // 当前节点从二叉树中删除
+      		    return node;
+      		  }
+      		  if (node.left !== null && node.right === null) { // 只有左节点
+              node = node.left;
+      		    return node;
+            }
+      		  // 中间节点有2个子节点
+      		  if (node.left !== null && node.right !== null) {
+      		  	var aux = findMinNode(node.right); // 找到右节点的最小叶子节点。
+      		  	node.key = aux.key; // 不能直接node = aux，因为子节点也会都被影响
+      		  	node.right = delNode(node.right, aux.key);
+      		  	return node;
+      		  }
+      		}
+        };
+        
+        this.del = function (key) {
+        	return delNode(root, key);
+        }
         
 	    }
 	    
@@ -147,8 +195,11 @@
 //	    binaryTree.postOrderTraverse(callback);
 //	    binaryTree.min(callback);
 //	    console.log('最大节点是：' + binaryTree.max());
-  	    console.log(binaryTree.search(7) ? "key 7 is found" : "key 7 is not found");
-  	    console.log(binaryTree.search(9) ? "key 9 is found" : "key 9 is not found");
+  	  //  console.log(binaryTree.search(7) ? "key 7 is found" : "key 7 is not found");
+  	  //  console.log(binaryTree.search(9) ? "key 9 is found" : "key 9 is not found");
+//	      binaryTree.del(1);
+	    binaryTree.del(3);
+	    binaryTree.inOrderTraverse(callback);
 	      
 	  </script>
 	</body>
